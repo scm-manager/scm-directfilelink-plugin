@@ -40,6 +40,9 @@ import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -71,6 +74,15 @@ public class DirectFileLinkServlet extends HttpServlet
 
   /** Field description */
   private static final Pattern PATTERN = Pattern.compile("/([^/]+)/(.*)");
+
+  /** Field description */
+  private static final long serialVersionUID = -4766582966425203440L;
+
+  /**
+   *   the logger for DirectFileLinkServlet
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DirectFileLinkServlet.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -162,6 +174,10 @@ public class DirectFileLinkServlet extends HttpServlet
     String path)
     throws IOException, RepositoryException
   {
+
+    // decode path, see http://goo.gl/H869J6
+    path = HttpUtil.decode(path);
+    logger.trace("load file {} from repository {}", path, repo);
 
     RepositoryService service = null;
     ServletOutputStream stream = null;
