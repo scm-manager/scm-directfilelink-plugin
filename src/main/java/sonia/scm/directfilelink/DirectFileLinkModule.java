@@ -34,9 +34,8 @@ package sonia.scm.directfilelink;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.servlet.ServletModule;
+import sonia.scm.plugin.Extension;
 
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 /**
  *
@@ -58,7 +57,7 @@ public class DirectFileLinkModule extends ServletModule
   @Override
   protected void configureServlets()
   {
-    filter(PATTERN).through(BasicAuthenticationFilter.class);
+//    filter(PATTERN).through(BasicAuthenticationFilter.class);
     serve(PATTERN).with(DirectFileLinkServlet.class);
   }
 }

@@ -34,19 +34,8 @@
 <plugin>
 
   <information>
+    <scm-version>2</scm-version>
     <author>Sebastian Sdorra</author>
   </information>
-
-  <conditions>
-    <min-version>${project.parent.version}</min-version>
-  </conditions>
-
-  <packages>
-    <package>sonia.scm.directfilelink</package>
-  </packages>
-
-  <resources>
-    <script>/scm/scm.directfilelink.js</script>
-  </resources>
 
 </plugin>

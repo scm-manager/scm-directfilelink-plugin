@@ -43,12 +43,8 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.security.RepositoryPermission;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -130,27 +126,8 @@ public class DirectFileLinkServlet extends HttpServlet
         String repositoryId = matcher.group(1);
         String path = matcher.group(2);
 
-        if (subject.isPermitted(new RepositoryPermission(repositoryId,
-          PermissionType.READ)))
-        {
-          try
-          {
             handleRequest(response, repositoryId, path);
-          }
-          catch (RepositoryNotFoundException ex)
-          {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-          }
-          catch (RepositoryException ex)
-          {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-          }
 
-        }
-        else
-        {
-          response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        }
       }
       else
       {
@@ -168,11 +145,10 @@ public class DirectFileLinkServlet extends HttpServlet
    * @param path
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private void handleRequest(HttpServletResponse response, String repo,
     String path)
-    throws IOException, RepositoryException
+    throws IOException
   {
 
     // decode path, see http://goo.gl/H869J6
