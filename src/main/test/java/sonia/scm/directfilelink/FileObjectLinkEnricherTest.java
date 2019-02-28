@@ -14,17 +14,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.api.v2.resources.HalAppender;
 import sonia.scm.api.v2.resources.HalEnricherContext;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.FileObject;
+import sonia.scm.repository.NamespaceAndName;
 
 import java.net.URI;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 @SubjectAware(configuration = "classpath:sonia/scm/directfilelink/shiro-001.ini", username = "user_1", password = "secret")
-public class RepositoryLinkEnricherTest {
+public class FileObjectLinkEnricherTest {
 
   private Provider<ScmPathInfoStore> scmPathInfoStoreProvider;
 
@@ -33,9 +32,9 @@ public class RepositoryLinkEnricherTest {
 
   @Mock
   private HalAppender appender;
-  private RepositoryLinkEnricher enricher;
+  private FileObjectLinkEnricher enricher;
 
-  public RepositoryLinkEnricherTest() {
+  public FileObjectLinkEnricherTest() {
     ThreadContext.unbindSecurityManager();
     ThreadContext.unbindSubject();
     ThreadContext.remove();
@@ -51,20 +50,13 @@ public class RepositoryLinkEnricherTest {
   @Test
   @SubjectAware(username = "admin", password = "secret")
   public void shouldEnrich() {
-    enricher = new RepositoryLinkEnricher(scmPathInfoStoreProvider);
-    Repository repo = new Repository("id", "type", "space", "name");
-    HalEnricherContext context = HalEnricherContext.of(repo);
+    enricher = new FileObjectLinkEnricher(scmPathInfoStoreProvider);
+    NamespaceAndName repo = new NamespaceAndName("space", "name");
+    FileObject fileObject = new FileObject();
+    fileObject.setPath("a.txt");
+    HalEnricherContext context = HalEnricherContext.of(fileObject, repo);
     enricher.enrich(context, appender);
-    verify(appender).appendLink("directFileLink", "https://scm-manager.org/scm/api/v2/plugins/directFileLink/space/name/{path}");
-  }
-
-  @Test
-  public void shouldNotEnrichBecauseOfMissingPermission() {
-    enricher = new RepositoryLinkEnricher(scmPathInfoStoreProvider);
-    Repository repo = new Repository("id", "type", "space", "name");
-    HalEnricherContext context = HalEnricherContext.of(repo);
-    enricher.enrich(context, appender);
-    verify(appender, never()).appendLink(any(),any());
+    verify(appender).appendLink("directFileLink", "https://scm-manager.org/scm/api/v2/plugins/directFileLink/space/name/a.txt");
   }
 
 }

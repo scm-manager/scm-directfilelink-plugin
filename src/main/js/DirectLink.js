@@ -17,14 +17,11 @@ class DirectLink extends React.Component<Props> {
   }
 
   render() {
-    const { t, repository, file } = this.props;
-    const link = repository._links.directFileLink.href.replace(
-      "{path}",
-      file.path
-    );
+    const { t, file } = this.props;
+    const link = file._links.directLink.href;
     return (
       <tr>
-        <td>{t("sonia-directfilelink-plugin.lastVersion")}</td>
+        <td>{t("scm-directfilelink-plugin.lastVersion")}</td>
         <td className="is-word-break">
           <a href={link} target="_blank">
             {link}
