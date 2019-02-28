@@ -105,7 +105,7 @@ public class DirectFileLinkResourceTest {
 
   @Test
   @SubjectAware(username = "admin", password = "secret")
-  public void shouldGetLastRevision() throws URISyntaxException, IOException {
+  public void shouldGetLatestRevision() throws URISyntaxException, IOException {
     LogCommandBuilder builder = mock(LogCommandBuilder.class );
     when(repoService.getLogCommand()).thenReturn(builder);
     ChangesetPagingResult changesets = mock(ChangesetPagingResult.class);
