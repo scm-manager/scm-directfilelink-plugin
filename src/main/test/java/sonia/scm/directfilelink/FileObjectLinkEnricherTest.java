@@ -56,7 +56,7 @@ public class FileObjectLinkEnricherTest {
     fileObject.setPath("a.txt");
     HalEnricherContext context = HalEnricherContext.of(fileObject, repo);
     enricher.enrich(context, appender);
-    verify(appender).appendLink("directFileLink", "https://scm-manager.org/scm/api/v2/plugins/directFileLink/space/name/a.txt");
+    verify(appender).appendLink("directLink", "https://scm-manager.org/scm/api/v2/plugins/directFileLink/space/name/a.txt");
   }
 
 }
