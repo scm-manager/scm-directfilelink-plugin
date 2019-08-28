@@ -14,6 +14,7 @@
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-directfilelink-plugin</name>
   <description>Creates a direct link to the latest version of a file</description>
+  <url>https://github.com/scm-manager/scm-directfilelink-plugin</url>
 
   <dependencies>
     <dependency>
