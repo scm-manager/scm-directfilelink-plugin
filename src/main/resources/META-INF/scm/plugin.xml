@@ -43,4 +43,8 @@
     <category>Workflow</category>
   </information>
 
+  <resources>
+    <script>assets/scm-directfilelink-plugin.bundle.js</script>
+  </resources>
+
 </plugin>
