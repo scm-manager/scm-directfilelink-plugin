@@ -1,13 +1,9 @@
-// @flow
-
 import React from "react";
-import { translate } from "react-i18next";
-import type { File } from "@scm-manager/ui-types";
+import { withTranslation, WithTranslation } from "react-i18next";
+import { File, Link } from "@scm-manager/ui-types";
 
-type Props = {
-  file: File,
-  // context prop
-  t: string => string
+type Props = WithTranslation & {
+  file: File;
 };
 
 class DirectLink extends React.Component<Props> {
@@ -17,13 +13,13 @@ class DirectLink extends React.Component<Props> {
 
   render() {
     const { t, file } = this.props;
-    const link = file._links.directLink.href;
+    const link = file._links.directLink as Link;
     return (
       <tr>
         <td>{t("scm-directfilelink-plugin.latestVersion")}</td>
         <td className="is-word-break">
-          <a href={link} target="_blank">
-            {link}
+          <a href={link.href} target="_blank">
+            {link.href}
           </a>
         </td>
       </tr>
@@ -31,4 +27,4 @@ class DirectLink extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(DirectLink);
+export default withTranslation("plugins")(DirectLink);
