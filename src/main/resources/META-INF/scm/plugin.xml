@@ -43,6 +43,10 @@
     <category>Workflow</category>
   </information>
 
+  <conditions>
+    <min-version>${project.parent.version}</min-version>
+  </conditions>
+
   <resources>
     <script>assets/scm-directfilelink-plugin.bundle.js</script>
   </resources>
