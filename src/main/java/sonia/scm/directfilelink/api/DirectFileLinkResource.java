@@ -5,26 +5,37 @@ import com.github.sdorra.spotter.ContentTypes;
 import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.NotFoundException;
+import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
+import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Direct File Link Plugin", description = "Direct File Link plugin provided endpoints")
+})
 @Slf4j
 @Path(DirectFileLinkResource.PATH)
 public class DirectFileLinkResource {
@@ -40,12 +51,18 @@ public class DirectFileLinkResource {
 
   @GET
   @Path("/{namespace}/{name}/{path: .*}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Download file", description = "Downloads file by path.", tags = "Direct File Link Plugin")
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the \"repository:read\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("path") String path) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
