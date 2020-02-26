@@ -3,8 +3,6 @@ package sonia.scm.directfilelink.api;
 import com.github.sdorra.spotter.ContentType;
 import com.github.sdorra.spotter.ContentTypes;
 import com.google.inject.Inject;
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
