@@ -24,7 +24,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class DirectFileLinkResource {
 
   @GET
   @Path("/{namespace}/{name}/{path: .*}")
-  @Operation(summary = "Download file", description = "Downloads file by path.", tags = "Direct File Link Plugin")
+  @Operation(summary = "Download file", description = "Downloads file by path.", tags = "Direct File Link Plugin", operationId = "directfilelink_download")
   @ApiResponse(responseCode = "200", description = "success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the \"repository:read\" privilege")
@@ -61,7 +60,7 @@ public class DirectFileLinkResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("path") String path) throws IOException {
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
