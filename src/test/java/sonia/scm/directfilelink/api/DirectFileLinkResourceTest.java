@@ -27,10 +27,10 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.apache.shiro.util.ThreadContext;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
+import org.jboss.resteasy.spi.Dispatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -81,11 +81,9 @@ public class DirectFileLinkResourceTest {
   @Mock
   private RepositoryService repoService;
 
-  private DirectFileLinkResource resource;
-
   @Before
   public void init() {
-    resource = new DirectFileLinkResource(factory);
+    DirectFileLinkResource resource = new DirectFileLinkResource(factory);
     dispatcher = MockDispatcherFactory.createDispatcher();
     dispatcher.getRegistry().addSingletonResource(resource);
     when(factory.create(any(NamespaceAndName.class))).thenReturn(repoService);
