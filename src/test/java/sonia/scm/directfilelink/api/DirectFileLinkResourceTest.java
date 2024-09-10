@@ -20,10 +20,8 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.apache.shiro.util.ThreadContext;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,8 +39,10 @@ import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.MediaType;
+import sonia.scm.web.RestDispatcher;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -55,11 +55,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+
+@RunWith(MockitoJUnitRunner.Silent.class)
 @SubjectAware(configuration = "classpath:sonia/scm/directfilelink/shiro-001.ini", username = "user_1", password = "secret")
 public class DirectFileLinkResourceTest {
 
-  private Dispatcher dispatcher;
+  private RestDispatcher dispatcher;
   private final MockHttpResponse response = new MockHttpResponse();
 
   @Rule
@@ -77,8 +78,8 @@ public class DirectFileLinkResourceTest {
   @Before
   public void init() {
     DirectFileLinkResource resource = new DirectFileLinkResource(factory);
-    dispatcher = MockDispatcherFactory.createDispatcher();
-    dispatcher.getRegistry().addSingletonResource(resource);
+    dispatcher = new RestDispatcher();
+    dispatcher.addSingletonResource(resource);
     when(factory.create(any(NamespaceAndName.class))).thenReturn(repoService);
     Repository repo = new Repository("id", "git", "space", "name");
     when(repoService.getRepository()).thenReturn(repo);
@@ -150,13 +151,13 @@ public class DirectFileLinkResourceTest {
 
   @Test
   public void shouldForbidNotPermittedUser() throws URISyntaxException {
-    thrown.expectMessage("Subject does not have permission [repository:read:id]");
-
     MockHttpRequest request = MockHttpRequest
       .get("/" + DirectFileLinkResource.PATH + "/space/repo/a.txt")
       .contentType(MediaType.APPLICATION_JSON);
 
     dispatcher.invoke(request, response);
+    assertThat(response.getStatus())
+      .isEqualTo(HttpServletResponse.SC_FORBIDDEN);
   }
 
 }

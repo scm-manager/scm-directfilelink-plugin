@@ -23,7 +23,7 @@ dependencies {
 }
 
 scmPlugin {
-  scmVersion = "2.0.0"
+  scmVersion = "3.0.0"
   displayName = "Direct Filelink"
   description = "Creates a direct link to the latest version of a file"
   author = "Cloudogu GmbH"

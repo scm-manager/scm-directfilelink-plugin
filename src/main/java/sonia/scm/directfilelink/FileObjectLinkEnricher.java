@@ -27,8 +27,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 @Extension
 @Enrich(FileObject.class)
