@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-directfilelink-plugin",
   "private": true,
-  "version": "3.0.0",
+  "version": "2.1.0-SNAPSHOT",
   "license": "AGPLv3",
   "main": "./src/main/js/index.ts",
   "scripts": {
