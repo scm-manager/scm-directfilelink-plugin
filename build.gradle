@@ -19,7 +19,7 @@ plugins {
 }
 
 dependencies {
-  implementation "com.github.sdorra:spotter-core:1.2.1"
+  implementation "com.github.sdorra:spotter-core:3.0.1"
 }
 
 scmPlugin {
